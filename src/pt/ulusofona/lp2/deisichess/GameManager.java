@@ -4,6 +4,12 @@ import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import pt.ulusofona.lp2.deisichess.PecaJoker;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 
 public class GameManager {
     public ArrayList<Peca> pecas = new ArrayList<>();
@@ -928,8 +934,26 @@ public class GameManager {
 
 
 
+
     public JPanel getAuthorsPanel() {
-        return null;
+        JPanel authorsPanel = new JPanel();
+
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File("src/images/two-face.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (image != null) {
+            ImageIcon imageIcon = new ImageIcon(image);
+            JLabel label = new JLabel(imageIcon);
+            authorsPanel.add(label);
+        } else {
+            JLabel errorLabel = new JLabel("Erro a carregar imagem");
+            authorsPanel.add(errorLabel);
+        }
+
+        return authorsPanel;
     }
 
     public Map<String,String> customizeBoard(){
