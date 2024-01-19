@@ -2,7 +2,7 @@ package pt.ulusofona.lp2.deisichess;
 
 public class InvalidTeamException extends Exception {
     public String problemDescription;
-    public String InvalidPieceName;
+    public String invalidPieceName;
 
     public InvalidTeamException(String problemDescription) {
         this.problemDescription = problemDescription;
@@ -13,6 +13,6 @@ public class InvalidTeamException extends Exception {
     }
 
     public String getInvalidPieceName() {
-        return InvalidPieceName;
+        return invalidPieceName;
     }
 }

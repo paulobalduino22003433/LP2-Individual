@@ -70,6 +70,9 @@ public class GameManager {
                     String[] partes = linha.split(":");
                     if (partes.length==4){
                         Peca peca = colocarTipoDePeca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim());
+                        if (!partes[2].trim().equals("10") && !partes[2].trim().equals("20") && !partes[2].trim().equals("30")) {
+                            throw new InvalidTeamException("Equipa Invalida: " + partes[2].trim());
+                        }
                         pecas.add(peca);
                         pecasRestantes++;
                         tabuleiro.incLinhaDoFicheiro();
@@ -153,6 +156,8 @@ public class GameManager {
         }
         catch (IOException e) {
             e.printStackTrace();
+        } catch (InvalidTeamException e) {
+            throw new RuntimeException(e);
         }
     }
 
