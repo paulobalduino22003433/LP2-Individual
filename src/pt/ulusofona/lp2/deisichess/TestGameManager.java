@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TestGameManager {
 
     @Test
-    void testloadGame(){
+    void testloadGame() throws InvalidTeamException {
         GameManager gameManager = new GameManager();
         try {
         gameManager.loadGame(new File("test-files/4x4.txt"));
@@ -21,11 +21,14 @@ public class TestGameManager {
         } catch (InvalidGameInputException e) {
             throw new RuntimeException(e);
         }
+        catch (InvalidTeamException e){
+            throw new InvalidTeamException("Equipa Invalida: " + e.getProblemDescription());
+        }
     }
 
 
         @Test
-        void testHomer() throws IOException, InvalidGameInputException {
+        void testHomer() throws IOException, InvalidGameInputException,InvalidTeamException  {
             GameManager gameManager = new GameManager();
             gameManager.loadGame(new File("test-files/8x8.txt"));
             int x0 = 6, y0 = 0, x1 = 5, y1 =1;
@@ -45,7 +48,7 @@ public class TestGameManager {
         }
 
         @Test
-        void testToStringHomer() throws IOException, InvalidGameInputException {
+        void testToStringHomer() throws IOException, InvalidGameInputException,InvalidTeamException  {
         GameManager gameManager = new GameManager();
         gameManager.loadGame(new File("test-files/8x8.txt"));
         GameManager.nrTurno=6;

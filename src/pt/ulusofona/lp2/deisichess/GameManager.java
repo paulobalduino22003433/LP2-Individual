@@ -30,7 +30,7 @@ public class GameManager {
     InvalidGameInputException invalidGameInputException = new InvalidGameInputException(0,"");
 
 
-    public void loadGame(File file) throws IOException, InvalidGameInputException {
+    public void loadGame(File file) throws IOException, InvalidGameInputException,InvalidTeamException {
         try {
             pecas = new ArrayList<>();
             blackTeam = new ArrayList<>();
@@ -157,7 +157,7 @@ public class GameManager {
         catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidTeamException e) {
-            throw new RuntimeException(e);
+            throw new InvalidTeamException("problem description: " + e.getProblemDescription());
         }
     }
 
