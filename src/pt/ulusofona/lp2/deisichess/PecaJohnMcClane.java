@@ -19,7 +19,11 @@ public class PecaJohnMcClane extends Peca{
 
     @Override
     public String toString() {
-        return "Sou o John McClane. Yippee ki yay. Sou duro de roer, mas não me sei mover";
+        if(estado.equals("capturado")) {
+            return identificador + " | John McClane | 20 | " + equipa + " | (W) " + alcunha + " @ (n/a)";
+        }
+
+        return identificador + " | John McClane | 20 | " + equipa + " | (W) " + alcunha + " @ (" + x + ", " + y + ")";
     }
 
 
