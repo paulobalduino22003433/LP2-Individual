@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Tabuleiro {
     public int tamanhoTabuleiro = -1, numPecaTotal = -1, linhaDoFicheiro=1;
-    public boolean isBlackTurn = true, isWhiteTurn = false, isYellowTurn=false, houvePecaMorta = false;
+    public boolean isBlackTurn = false, isWhiteTurn = false, isYellowTurn=false, houvePecaMorta = false;
     public ArrayList<Peca> whiteTeam;
     public ArrayList<Peca> blackTeam;
 
@@ -44,21 +44,42 @@ public class Tabuleiro {
         return numPecaTotal;
     }
 
-    public void changeTurnInGame() {
+    public boolean changeTurnInGame() {
         if (isBlackTurn) {
-            isBlackTurn = false;
-            isWhiteTurn = true;
-        } else if (isWhiteTurn) {
-            isWhiteTurn = false;
-            if (yellowTeam.size() > 0) {
-                isYellowTurn = true;
-            } else {
-                isBlackTurn = true;
+            if (yellowTeam.isEmpty()){
+                isBlackTurn=false;
+                isWhiteTurn=true;
+                return true;
+            }else{
+                isBlackTurn=false;
+                isYellowTurn=true;
+                return true;
             }
-        } else if (isYellowTurn) {
-            isYellowTurn = false;
-            isBlackTurn = true;
         }
+        if (isWhiteTurn){
+            if (yellowTeam.isEmpty()){
+                isWhiteTurn=false;
+                isBlackTurn=true;
+                return true;
+            }else{
+                isWhiteTurn=false;
+                isYellowTurn=true;
+                return true;
+            }
+        }
+
+        if (isYellowTurn){
+            if (blackTeam.isEmpty()){
+                isYellowTurn=false;
+                isWhiteTurn=true;
+                return true;
+            }else{
+                isYellowTurn=false;
+                isBlackTurn=true;
+                return true;
+            }
+        }
+        return true;
     }
 
 
@@ -68,6 +89,10 @@ public class Tabuleiro {
 
     public boolean getIsWhiteTurn() {
         return isWhiteTurn;
+    }
+
+    public boolean getIsYellowTurn(){
+        return isYellowTurn;
     }
 
     public boolean algumaPecaMorreu() {

@@ -16,7 +16,6 @@ public class GameManager {
     public static String[][] cordenadasPecasArray;
     public ArrayList<Peca> blackTeam = new ArrayList<>();
     public ArrayList<Peca> whiteTeam = new ArrayList<>();
-
     public ArrayList<Peca> yellowTeam = new ArrayList<>();
     public Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam,yellowTeam);
     public StatsPeca statusPreta = new StatsPeca();
@@ -136,6 +135,16 @@ public class GameManager {
             organizePiece();
             removeCapturedPieces();
             fillTop5Capturas();
+            if (blackTeam.isEmpty()){
+                tabuleiro.isYellowVsWhiteGame=true;
+            }
+            if (whiteTeam.isEmpty()){
+                tabuleiro.isYellowVsBlackGame=true;
+            }
+            if (yellowTeam.isEmpty()){
+                tabuleiro.isWhiteVsBlackGame=true;
+            }
+
             fileReader.close();
         }catch (FileNotFoundException e){
             String errorMessage = "File not found";
@@ -229,6 +238,7 @@ public class GameManager {
                 peca.estadoPecaCapturado();
                 whiteTeam.remove(peca);
                 blackTeam.remove(peca);
+                yellowTeam.remove(peca);
             }
         }
     }
@@ -795,9 +805,10 @@ public class GameManager {
             return 10;
         } else if (tabuleiro.getIsWhiteTurn()) {
             return 20;
-        } else {
+        } else if(tabuleiro.getIsYellowTurn()) {
             return 30;
         }
+        return 30;
     }
 
 
