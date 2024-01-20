@@ -135,15 +135,7 @@ public class GameManager {
             organizePiece();
             removeCapturedPieces();
             fillTop5Capturas();
-            if (blackTeam.isEmpty()){
-                tabuleiro.isYellowVsWhiteGame=true;
-            }
-            if (whiteTeam.isEmpty()){
-                tabuleiro.isYellowVsBlackGame=true;
-            }
-            if (yellowTeam.isEmpty()){
-                tabuleiro.isWhiteVsBlackGame=true;
-            }
+            tabuleiro.decideGameTeams();
 
             fileReader.close();
         }catch (FileNotFoundException e){
@@ -195,9 +187,11 @@ public class GameManager {
         for (int y = 0; y < tabuleiro.getTamanhoTabuleiro(); y++) {
             for (int x = 0; x < tabuleiro.getTamanhoTabuleiro(); x++) {
                 for (int identificador = 0; identificador < tabuleiro.getNumPecaTotal(); identificador++) {
-                    if (pecas.get(identificador).getIdentificador().equals(cordenadasPecasArray[y][x])) {
-                        pecas.get(identificador).setX(Integer.toString(x));
-                        pecas.get(identificador).setY(Integer.toString(y));
+                    if (pecas.get(identificador)!=null){
+                        if (pecas.get(identificador).getIdentificador().equals(cordenadasPecasArray[y][x])) {
+                            pecas.get(identificador).setX(Integer.toString(x));
+                            pecas.get(identificador).setY(Integer.toString(y));
+                        }
                     }
                 }
             }
@@ -596,6 +590,15 @@ public class GameManager {
             }
         }
 
+        if (tabuleiro.getIsYellowTurn()) {
+            for (Peca peca : yellowTeam) {
+                if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])) {
+                    pecaParaMover = peca;
+                    break;
+                }
+            }
+        }
+
         if (pecaParaMover!=null){
             if(isMoveValid(pecaParaMover, x0, y0, x1, y1)){
                 wasMoveValid=true;
@@ -801,6 +804,10 @@ public class GameManager {
 
 
     public int getCurrentTeamID() {
+        if (tabuleiro.isWhiteVsBlackGame){
+
+
+        }
         if (tabuleiro.getIsBlackTurn()) {
             return 10;
         } else if (tabuleiro.getIsWhiteTurn()) {
