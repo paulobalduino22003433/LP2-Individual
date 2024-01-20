@@ -16,7 +16,9 @@ public class GameManager {
     public static String[][] cordenadasPecasArray;
     public ArrayList<Peca> blackTeam = new ArrayList<>();
     public ArrayList<Peca> whiteTeam = new ArrayList<>();
-    public Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam);
+
+    public ArrayList<Peca> yellowTeam = new ArrayList<>();
+    public Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam,yellowTeam);
     public StatsPeca statusPreta = new StatsPeca();
     public StatsPeca statusBranca = new StatsPeca();
     public GameResults gameResults = new GameResults();
@@ -35,8 +37,9 @@ public class GameManager {
             pecas = new ArrayList<>();
             blackTeam = new ArrayList<>();
             whiteTeam = new ArrayList<>();
+            yellowTeam=new ArrayList<>();
             cordenadasPecasArray = null;
-            tabuleiro = new Tabuleiro(whiteTeam,blackTeam);
+            tabuleiro = new Tabuleiro(whiteTeam,blackTeam,yellowTeam);
             savedTurnoEquipa = false;
             savedNumeroTurno= -1;
             nrTurno=0;
@@ -210,6 +213,9 @@ public class GameManager {
             }
             if (peca.getEquipa().equals("20")) {
                 whiteTeam.add(peca);
+            }
+            if (peca.getEquipa().equals("30")){
+                yellowTeam.add(peca);
             }
         }
     }
@@ -785,8 +791,15 @@ public class GameManager {
 
 
     public int getCurrentTeamID() {
-        return tabuleiro.getIsBlackTurn() ? 10 : 20;
+        if (tabuleiro.getIsBlackTurn()) {
+            return 10;
+        } else if (tabuleiro.getIsWhiteTurn()) {
+            return 20;
+        } else {
+            return 30;
+        }
     }
+
 
 
     public boolean gameOver() {
@@ -897,6 +910,10 @@ public class GameManager {
         Peca currentPiece = Peca.getPecaByCoordinates(x, y, pecas);
 
         if (currentPiece != null) {
+            if(currentPiece.tipoDePeca.equals("10")){
+                hints.add("Sou o John McClane. Yippee ki yay. Sou duro de roer, mas não me sei mover");
+                return hints;
+            }
             for (int i = 0; i < cordenadasPecasArray.length; i++) {
                 for (int j = 0; j < cordenadasPecasArray[i].length; j++) {
                     skip=false;
