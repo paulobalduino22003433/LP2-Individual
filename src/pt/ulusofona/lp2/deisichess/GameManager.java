@@ -31,6 +31,12 @@ public class GameManager {
     public int johnMcClaneCountWhite;
     public int johnMcClaneCountBlack;
 
+    public ArrayList<Peca> yellowTeam = new ArrayList<>();
+
+    public boolean isWhiteVsBlackGame=false;
+    public boolean isYellowVsWhiteGame=false;
+    public boolean isYellowVsBlackGame=false;
+
 
     public void loadGame(File file) throws IOException, InvalidGameInputException,InvalidTeamException {
         try {
@@ -49,6 +55,10 @@ public class GameManager {
             gameResults= new GameResults();
             johnMcClaneCountBlack=0;
             johnMcClaneCountWhite=0;
+            yellowTeam = new ArrayList<>();
+            isWhiteVsBlackGame=false;
+            isYellowVsWhiteGame=false;
+            isYellowVsBlackGame=false;
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -137,6 +147,15 @@ public class GameManager {
             organizePiece();
             removeCapturedPieces();
             fillTop5Capturas();
+            if (yellowTeam.isEmpty()){
+                isWhiteVsBlackGame=true;
+            }
+            if (blackTeam.isEmpty()){
+                isYellowVsWhiteGame=true;
+            }
+            if (whiteTeam.isEmpty()){
+                isYellowVsBlackGame=true;
+            }
             fileReader.close();
         }catch (FileNotFoundException e){
             String errorMessage = "File not found";
@@ -165,6 +184,18 @@ public class GameManager {
         }
     }
 
+    public int getCurrentTeamID() {
+        if (isWhiteVsBlackGame){
+            return tabuleiro.getIsBlackTurn() ? 10 : 20;
+        }
+        if (isYellowVsBlackGame){
+            return tabuleiro.getIsBlackTurn() ? 10 : 30;
+        }
+        if (isYellowVsWhiteGame){
+            return tabuleiro.getIsYellowTurn() ? 30 : 20;
+        }
+        return 10;
+    }
 
     public Peca colocarTipoDePeca(String identificador, String tipoDePeca, String equipa, String alcunha) {
         Peca pecaDeRetorno = switch (tipoDePeca) {
@@ -215,6 +246,10 @@ public class GameManager {
             if (peca.getEquipa().equals("20")) {
                 whiteTeam.add(peca);
             }
+
+            if (peca.getEquipa().equals("30")){
+                yellowTeam.add(peca);
+            }
         }
     }
 
@@ -227,6 +262,7 @@ public class GameManager {
                 peca.estadoPecaCapturado();
                 whiteTeam.remove(peca);
                 blackTeam.remove(peca);
+                yellowTeam.remove(peca);
             }
         }
     }
@@ -840,11 +876,6 @@ public class GameManager {
         nrTurno++;
         tabuleiro.changeTurnInGame();
         return true;
-    }
-
-
-    public int getCurrentTeamID() {
-        return tabuleiro.getIsBlackTurn() ? 10 : 20;
     }
 
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Tabuleiro {
     public int tamanhoTabuleiro = -1, numPecaTotal = -1, linhaDoFicheiro=1;
-    public boolean isBlackTurn = true, isWhiteTurn = false, houvePecaMorta = false;
+    public boolean isBlackTurn = true, isWhiteTurn = false,isYellowTurn=true, houvePecaMorta = false;
     public ArrayList<Peca> whiteTeam;
     public ArrayList<Peca> blackTeam;
 
@@ -52,6 +52,10 @@ public class Tabuleiro {
 
     public boolean getIsWhiteTurn() {
         return isWhiteTurn;
+    }
+
+    public boolean getIsYellowTurn(){
+        return isYellowTurn;
     }
 
     public boolean algumaPecaMorreu() {
