@@ -28,6 +28,7 @@ public class GameManager {
     public ArrayList<Capturas> capturas = new ArrayList<>();
     public ArrayList<Capturas> top5Capturas = new ArrayList<>();
     InvalidGameInputException invalidGameInputException = new InvalidGameInputException(0,"");
+    public int johnMcClaneCount;
 
 
     public void loadGame(File file) throws IOException, InvalidGameInputException,InvalidTeamException {
@@ -45,6 +46,7 @@ public class GameManager {
             capturas=new ArrayList<>();
             top5Capturas=new ArrayList<>();
             gameResults= new GameResults();
+            johnMcClaneCount=0;
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -685,6 +687,30 @@ public class GameManager {
                            top5Capturas.add(captura1);
                         }
                     }
+                    if (pecaBranca.tipoDePeca.equals("10")){
+                        if (johnMcClaneCount<3){
+                            cordenadasPecasArray[y0][x0] = movimentoParaPeca;
+                            cordenadasPecasArray[y1][x1] = pecaAtual;
+                            for (Peca pecaTemporaria : pecas) {
+                                if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
+                                    pecaTemporaria.setX(Integer.toString(x1));
+                                    pecaTemporaria.setY(Integer.toString(y1));
+                                }
+                                if (pecaTemporaria.getIdentificador().equals(movimentoParaPeca)){
+                                    pecaTemporaria.setX(Integer.toString(x0));
+                                    pecaTemporaria.setY(Integer.toString(y0));
+                                }
+                            }
+                            if (turnoJoker==6){
+                                turnoJoker=0;
+                            }
+                            turnoJoker++;
+                            nrTurno++;
+                            johnMcClaneCount++;
+                            tabuleiro.changeTurnInGame();
+                            return true;
+                        }
+                    }
                     pecaBranca.estadoPecaCapturado();
                     pecaBranca.x = "";
                     pecaBranca.y = "";
@@ -741,6 +767,33 @@ public class GameManager {
                         if (!isInTop5){
                             Capturas captura1 = new Capturas(pecaQueCaptura,1);
                             top5Capturas.add(captura1);
+                        }
+                    }
+
+                    if (pecaPreta.tipoDePeca.equals("10")){
+                        if (johnMcClaneCount<3){
+
+                            cordenadasPecasArray[y0][x0] = movimentoParaPeca;
+                            cordenadasPecasArray[y1][x1] = pecaAtual;
+
+                            for (Peca pecaTemporaria : pecas) {
+                                if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
+                                    pecaTemporaria.setX(Integer.toString(x1));
+                                    pecaTemporaria.setY(Integer.toString(y1));
+                                }
+                                if (pecaTemporaria.getIdentificador().equals(movimentoParaPeca)){
+                                    pecaTemporaria.setX(Integer.toString(x0));
+                                    pecaTemporaria.setY(Integer.toString(y0));
+                                }
+                            }
+                            if (turnoJoker==6){
+                                turnoJoker=0;
+                            }
+                            turnoJoker++;
+                            nrTurno++;
+                            johnMcClaneCount++;
+                            tabuleiro.changeTurnInGame();
+                            return true;
                         }
                     }
                     pecaPreta.estadoPecaCapturado();
@@ -897,6 +950,10 @@ public class GameManager {
         Peca currentPiece = Peca.getPecaByCoordinates(x, y, pecas);
 
         if (currentPiece != null) {
+            if(currentPiece.tipoDePeca.equals("10")){
+                hints.add("Sou o John McClane. Yippee ki yay. Sou duro de roer, mas não me sei mover");
+                return hints;
+            }
             for (int i = 0; i < cordenadasPecasArray.length; i++) {
                 for (int j = 0; j < cordenadasPecasArray[i].length; j++) {
                     skip=false;
