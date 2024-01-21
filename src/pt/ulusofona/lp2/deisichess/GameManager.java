@@ -33,11 +33,6 @@ public class GameManager {
 
     public ArrayList<Peca> yellowTeam = new ArrayList<>();
 
-    public boolean isWhiteVsBlackGame=false;
-    public boolean isYellowVsWhiteGame=false;
-    public boolean isYellowVsBlackGame=false;
-
-
     public void loadGame(File file) throws IOException, InvalidGameInputException,InvalidTeamException {
         try {
             pecas = new ArrayList<>();
@@ -56,9 +51,9 @@ public class GameManager {
             johnMcClaneCountBlack=0;
             johnMcClaneCountWhite=0;
             yellowTeam = new ArrayList<>();
-            isWhiteVsBlackGame=false;
-            isYellowVsWhiteGame=false;
-            isYellowVsBlackGame=false;
+            tabuleiro.isWhiteVsBlackGame=false;
+            tabuleiro.isYellowVsWhiteGame=false;
+            tabuleiro.isYellowVsBlackGame=false;
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -149,13 +144,14 @@ public class GameManager {
             fillTop5Capturas();
             if (yellowTeam.isEmpty()){
                 tabuleiro.isYellowTurn=false;
-                isWhiteVsBlackGame=true;
+                tabuleiro.isWhiteVsBlackGame=true;
             }
             if (blackTeam.isEmpty()){
-                isYellowVsWhiteGame=true;
+                tabuleiro.isYellowVsWhiteGame=true;
             }
             if (whiteTeam.isEmpty()){
-                isYellowVsBlackGame=true;
+                tabuleiro.isYellowTurn=false;
+                tabuleiro.isYellowVsBlackGame=true;
             }
             fileReader.close();
         }catch (FileNotFoundException e){
@@ -186,13 +182,13 @@ public class GameManager {
     }
 
     public int getCurrentTeamID() {
-        if (isWhiteVsBlackGame){
+        if (tabuleiro.isWhiteVsBlackGame){
             return tabuleiro.getIsBlackTurn() ? 10 : 20;
         }
-        if (isYellowVsBlackGame){
+        if (tabuleiro.isYellowVsBlackGame){
             return tabuleiro.getIsBlackTurn() ? 10 : 30;
         }
-        if (isYellowVsWhiteGame){
+        if (tabuleiro.isYellowVsWhiteGame){
             return tabuleiro.getIsYellowTurn() ? 30 : 20;
         }
         return 10;
@@ -425,7 +421,7 @@ public class GameManager {
           if (percursoHorizontal == percursoVertical || percursoHorizontal == -percursoVertical) {
               //Checa se o movimento não passa de 3 casas
               if (percursoHorizontal <= 3 && percursoHorizontal >= -3) {
-                  //Itera sobre as casas entre (x0, y0) and (x1, y1)
+                  //Itera sobre as casas entre (x0, y0) e (x1, y1)
                   for (int i = 1; i < Math.abs(percursoHorizontal); i++) {
                       int checkX = x0 + Integer.signum(percursoHorizontal) * i;
                       int checkY = y0 + Integer.signum(percursoVertical) * i;
@@ -546,7 +542,7 @@ public class GameManager {
               }
 
               if (isHorizontal){
-                  // Itera sobre as casas emtre (x0, y0) e (x1, y1) para movimento horizontal
+                  // Itera sobre as casas entre (x0, y0) e (x1, y1) para movimento horizontal
                   for (int i = 1; i < Math.abs(percursoHorizontal); i++) {
                       int checkX = x0 + Integer.signum(percursoHorizontal) * i;
                       int checkY = y0;
@@ -589,14 +585,6 @@ public class GameManager {
              return false;
           }
       }
-
-
-
-
-
-
-
-
 
         return isItvalid;
 
@@ -892,7 +880,9 @@ public class GameManager {
     public boolean gameOver() {
         boolean isThereWhiteKing=false;
         boolean isThereBlackKing=false;
+        boolean isThereYellowKing=false;
 
+        if (tabuleiro.isWhiteVsBlackGame){
             for (Peca pecaBlack:blackTeam){
                 if (pecaBlack.tipoDePeca.equals("0")){
                     isThereBlackKing=true;
@@ -915,9 +905,67 @@ public class GameManager {
                 return true;
             }
 
-        if ((isThereBlackKing && isThereWhiteKing && blackTeam.size()==1 && whiteTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.algumaPecaMorreu())) {
-            gameResults.jogoEmpatado();
-            return true;
+            if ((isThereBlackKing && isThereWhiteKing && blackTeam.size()==1 && whiteTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.algumaPecaMorreu())) {
+                gameResults.jogoEmpatado();
+                return true;
+            }
+        }
+        if (tabuleiro.isYellowVsBlackGame){
+            for (Peca pecaBlack:blackTeam){
+                if (pecaBlack.tipoDePeca.equals("0")){
+                    isThereBlackKing=true;
+                }
+            }
+
+            for (Peca pecaYellow:yellowTeam){
+                if (pecaYellow.tipoDePeca.equals("0")){
+                    isThereYellowKing=true;
+                }
+            }
+
+            if (isThereBlackKing && !isThereYellowKing){
+                gameResults.pretasGanham();
+                return true;
+            }
+
+            if (isThereYellowKing && !isThereBlackKing){
+                gameResults.amarelasGanham();
+                return true;
+            }
+
+            if ((isThereBlackKing && isThereYellowKing && blackTeam.size()==1 && yellowTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.algumaPecaMorreu())) {
+                gameResults.jogoEmpatado();
+                return true;
+            }
+
+        }
+        if(tabuleiro.isYellowVsWhiteGame){
+            for (Peca pecaWhite:whiteTeam){
+                if (pecaWhite.tipoDePeca.equals("0")){
+                    isThereWhiteKing=true;
+                }
+            }
+
+            for (Peca pecaYellow:yellowTeam){
+                if (pecaYellow.tipoDePeca.equals("0")){
+                    isThereYellowKing=true;
+                }
+            }
+
+            if (isThereWhiteKing && !isThereYellowKing){
+                gameResults.brancasGanham();
+                return true;
+            }
+
+            if (isThereYellowKing && !isThereWhiteKing){
+                gameResults.amarelasGanham();
+                return true;
+            }
+
+            if ((isThereWhiteKing && isThereYellowKing && whiteTeam.size()==1 && yellowTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.algumaPecaMorreu())) {
+                gameResults.jogoEmpatado();
+                return true;
+            }
         }
         return false;
     }

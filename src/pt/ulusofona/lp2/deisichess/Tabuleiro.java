@@ -7,6 +7,10 @@ public class Tabuleiro {
     public boolean isBlackTurn = true, isWhiteTurn = false,isYellowTurn=true, houvePecaMorta = false;
     public ArrayList<Peca> whiteTeam;
     public ArrayList<Peca> blackTeam;
+    public boolean isWhiteVsBlackGame=false;
+    public boolean isYellowVsWhiteGame=false;
+    public boolean isYellowVsBlackGame=false;
+
 
     public Tabuleiro(ArrayList<Peca> whiteTeam, ArrayList<Peca> blackTeam) {
         this.whiteTeam = whiteTeam;
@@ -37,12 +41,33 @@ public class Tabuleiro {
     }
 
     public void changeTurnInGame() {
-        if (isBlackTurn) {
-            isBlackTurn = false;
-            isWhiteTurn = true;
-        } else {
-            isWhiteTurn = false;
-            isBlackTurn = true;
+        if (isWhiteVsBlackGame){
+            if (isBlackTurn) {
+                isBlackTurn = false;
+                isWhiteTurn = true;
+            } else {
+                isWhiteTurn = false;
+                isBlackTurn = true;
+            }
+        }
+        if (isYellowVsWhiteGame){
+            if (isYellowTurn) {
+                isYellowTurn = false;
+                isWhiteTurn = true;
+            } else {
+                isWhiteTurn = false;
+                isYellowTurn = true;
+            }
+        }
+
+        if (isYellowVsBlackGame){
+            if (isYellowTurn) {
+                isYellowTurn = false;
+                isBlackTurn = true;
+            } else {
+                isBlackTurn = false;
+                isYellowTurn = true;
+            }
         }
     }
 
