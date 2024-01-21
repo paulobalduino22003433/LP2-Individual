@@ -29,8 +29,4 @@ public class GameResults {
     public void brancasGanham() {
         resultadoJogo = "VENCERAM AS BRANCAS";
     }
-
-    public void amarelasGanham() {
-        resultadoJogo = "VENCERAM AS AMARELAS";
-    }
 }

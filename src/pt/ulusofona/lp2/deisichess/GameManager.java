@@ -16,8 +16,7 @@ public class GameManager {
     public static String[][] cordenadasPecasArray;
     public ArrayList<Peca> blackTeam = new ArrayList<>();
     public ArrayList<Peca> whiteTeam = new ArrayList<>();
-    public ArrayList<Peca> yellowTeam = new ArrayList<>();
-    public Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam,yellowTeam);
+    public Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam);
     public StatsPeca statusPreta = new StatsPeca();
     public StatsPeca statusBranca = new StatsPeca();
     public GameResults gameResults = new GameResults();
@@ -36,9 +35,8 @@ public class GameManager {
             pecas = new ArrayList<>();
             blackTeam = new ArrayList<>();
             whiteTeam = new ArrayList<>();
-            yellowTeam=new ArrayList<>();
             cordenadasPecasArray = null;
-            tabuleiro = new Tabuleiro(whiteTeam,blackTeam,yellowTeam);
+            tabuleiro = new Tabuleiro(whiteTeam,blackTeam);
             savedTurnoEquipa = false;
             savedNumeroTurno= -1;
             nrTurno=0;
@@ -135,8 +133,6 @@ public class GameManager {
             organizePiece();
             removeCapturedPieces();
             fillTop5Capturas();
-            tabuleiro.decideGameTeams();
-
             fileReader.close();
         }catch (FileNotFoundException e){
             String errorMessage = "File not found";
@@ -165,30 +161,6 @@ public class GameManager {
         }
     }
 
-    public int getCurrentTeamID() {
-        if (tabuleiro.isWhiteVsBlackGame){
-            if (tabuleiro.getIsBlackTurn()){
-                return 10;
-            }
-            return 20;
-        }
-        if (tabuleiro.isYellowVsWhiteGame){
-            if(tabuleiro.getIsYellowTurn()){
-                return 30;
-            }
-            return 20;
-        }
-
-        if (tabuleiro.isYellowVsBlackGame){
-            if (tabuleiro.getIsYellowTurn()){
-                return 30;
-            }
-            return 10;
-        }
-
-        return 30;
-    }
-
 
     public Peca colocarTipoDePeca(String identificador, String tipoDePeca, String equipa, String alcunha) {
         Peca pecaDeRetorno = switch (tipoDePeca) {
@@ -211,11 +183,9 @@ public class GameManager {
         for (int y = 0; y < tabuleiro.getTamanhoTabuleiro(); y++) {
             for (int x = 0; x < tabuleiro.getTamanhoTabuleiro(); x++) {
                 for (int identificador = 0; identificador < tabuleiro.getNumPecaTotal(); identificador++) {
-                    if (pecas.get(identificador)!=null){
-                        if (pecas.get(identificador).getIdentificador().equals(cordenadasPecasArray[y][x])) {
-                            pecas.get(identificador).setX(Integer.toString(x));
-                            pecas.get(identificador).setY(Integer.toString(y));
-                        }
+                    if (pecas.get(identificador).getIdentificador().equals(cordenadasPecasArray[y][x])) {
+                        pecas.get(identificador).setX(Integer.toString(x));
+                        pecas.get(identificador).setY(Integer.toString(y));
                     }
                 }
             }
@@ -237,15 +207,9 @@ public class GameManager {
         for (Peca peca : pecas) {
             if (peca.getEquipa().equals("10")) {
                 blackTeam.add(peca);
-                tabuleiro.blackTeam.add(peca);
             }
             if (peca.getEquipa().equals("20")) {
                 whiteTeam.add(peca);
-                tabuleiro.whiteTeam.add(peca);
-            }
-            if (peca.getEquipa().equals("30")){
-                yellowTeam.add(peca);
-                tabuleiro.yellowTeam.add(peca);
             }
         }
     }
@@ -259,10 +223,6 @@ public class GameManager {
                 peca.estadoPecaCapturado();
                 whiteTeam.remove(peca);
                 blackTeam.remove(peca);
-                yellowTeam.remove(peca);
-                tabuleiro.whiteTeam.remove(peca);
-                tabuleiro.blackTeam.remove(peca);
-                tabuleiro.yellowTeam.remove(peca);
             }
         }
     }
@@ -620,15 +580,6 @@ public class GameManager {
             }
         }
 
-        if (tabuleiro.getIsYellowTurn()) {
-            for (Peca peca : yellowTeam) {
-                if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])) {
-                    pecaParaMover = peca;
-                    break;
-                }
-            }
-        }
-
         if (pecaParaMover!=null){
             if(isMoveValid(pecaParaMover, x0, y0, x1, y1)){
                 wasMoveValid=true;
@@ -832,11 +783,16 @@ public class GameManager {
         return true;
     }
 
+
+    public int getCurrentTeamID() {
+        return tabuleiro.getIsBlackTurn() ? 10 : 20;
+    }
+
+
     public boolean gameOver() {
         boolean isThereWhiteKing=false;
         boolean isThereBlackKing=false;
-        boolean isThereYellowKing=false;
-        if (tabuleiro.isWhiteVsBlackGame) {
+
             for (Peca pecaBlack:blackTeam){
                 if (pecaBlack.tipoDePeca.equals("0")){
                     isThereBlackKing=true;
@@ -859,72 +815,9 @@ public class GameManager {
                 return true;
             }
 
-            if ((isThereBlackKing && isThereWhiteKing && blackTeam.size()==1 && whiteTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.algumaPecaMorreu())) {
-                gameResults.jogoEmpatado();
-                return true;
-            }
-        }
-
-        if (tabuleiro.isYellowVsBlackGame){
-            for (Peca pecaBlack:blackTeam){
-                if (pecaBlack.tipoDePeca.equals("0")){
-                    isThereBlackKing=true;
-                }
-            }
-
-            for (Peca pecaYellow:yellowTeam){
-                if (pecaYellow.tipoDePeca.equals("0")){
-                    isThereYellowKing=true;
-                }
-            }
-
-
-            if (isThereBlackKing && !isThereYellowKing){
-                gameResults.pretasGanham();
-                return true;
-            }
-
-            if (isThereYellowKing && !isThereBlackKing){
-                gameResults.amarelasGanham();
-                return true;
-            }
-
-            if ((isThereBlackKing && isThereYellowKing && blackTeam.size()==1 && yellowTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.algumaPecaMorreu())) {
-                gameResults.jogoEmpatado();
-                return true;
-            }
-
-        }
-
-        if (tabuleiro.isYellowVsWhiteGame){
-            for (Peca pecaWhite:whiteTeam){
-                if (pecaWhite.tipoDePeca.equals("0")){
-                    isThereWhiteKing=true;
-                }
-            }
-
-            for (Peca pecaYellow:yellowTeam){
-                if (pecaYellow.tipoDePeca.equals("0")){
-                    isThereYellowKing=true;
-                }
-            }
-
-
-            if (isThereWhiteKing && !isThereYellowKing){
-                gameResults.brancasGanham();
-                return true;
-            }
-
-            if (isThereYellowKing && !isThereWhiteKing){
-                gameResults.amarelasGanham();
-                return true;
-            }
-
-            if ((isThereWhiteKing && isThereYellowKing && whiteTeam.size()==1 && yellowTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.algumaPecaMorreu())) {
-                gameResults.jogoEmpatado();
-                return true;
-            }
-
+        if ((isThereBlackKing && isThereWhiteKing && blackTeam.size()==1 && whiteTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.algumaPecaMorreu())) {
+            gameResults.jogoEmpatado();
+            return true;
         }
         return false;
     }
@@ -1004,10 +897,6 @@ public class GameManager {
         Peca currentPiece = Peca.getPecaByCoordinates(x, y, pecas);
 
         if (currentPiece != null) {
-            if(currentPiece.tipoDePeca.equals("10")){
-                hints.add("Sou o John McClane. Yippee ki yay. Sou duro de roer, mas não me sei mover");
-                return hints;
-            }
             for (int i = 0; i < cordenadasPecasArray.length; i++) {
                 for (int j = 0; j < cordenadasPecasArray[i].length; j++) {
                     skip=false;
