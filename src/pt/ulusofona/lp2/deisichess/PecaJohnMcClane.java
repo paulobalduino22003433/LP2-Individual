@@ -11,9 +11,9 @@ public class PecaJohnMcClane extends Peca{
     @Override
     public void setPng() {
         if (equipa.equals("10")) {
-            png = "padre_vila_black.png";
+            png = "double-face-mask.png";
         } else {
-            png = "padre_vila_white.png";
+            png = "white-mask.png";
         }
     }
 

@@ -28,7 +28,8 @@ public class GameManager {
     public ArrayList<Capturas> capturas = new ArrayList<>();
     public ArrayList<Capturas> top5Capturas = new ArrayList<>();
     InvalidGameInputException invalidGameInputException = new InvalidGameInputException(0,"");
-    public int johnMcClaneCount;
+    public int johnMcClaneCountWhite;
+    public int johnMcClaneCountBlack;
 
 
     public void loadGame(File file) throws IOException, InvalidGameInputException,InvalidTeamException {
@@ -46,7 +47,8 @@ public class GameManager {
             capturas=new ArrayList<>();
             top5Capturas=new ArrayList<>();
             gameResults= new GameResults();
-            johnMcClaneCount=0;
+            johnMcClaneCountBlack=0;
+            johnMcClaneCountWhite=0;
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -290,6 +292,10 @@ public class GameManager {
       int percursoHorizontal = x1 - x0;
       int percursoVertical = y1 - y0;
       int jokerMove = 1;
+
+      if (peca.tipoDePeca.equals("10")){
+          return false;
+      }
       if (peca.tipoDePeca.equals("7")) {
           switch (turnoJoker) {
               case 1:
@@ -688,7 +694,7 @@ public class GameManager {
                         }
                     }
                     if (pecaBranca.tipoDePeca.equals("10")){
-                        if (johnMcClaneCount<3){
+                        if (johnMcClaneCountBlack<3){
                             cordenadasPecasArray[y0][x0] = movimentoParaPeca;
                             cordenadasPecasArray[y1][x1] = pecaAtual;
                             for (Peca pecaTemporaria : pecas) {
@@ -706,7 +712,7 @@ public class GameManager {
                             }
                             turnoJoker++;
                             nrTurno++;
-                            johnMcClaneCount++;
+                            johnMcClaneCountBlack++;
                             tabuleiro.changeTurnInGame();
                             return true;
                         }
@@ -771,7 +777,7 @@ public class GameManager {
                     }
 
                     if (pecaPreta.tipoDePeca.equals("10")){
-                        if (johnMcClaneCount<3){
+                        if (johnMcClaneCountWhite<3){
 
                             cordenadasPecasArray[y0][x0] = movimentoParaPeca;
                             cordenadasPecasArray[y1][x1] = pecaAtual;
@@ -791,7 +797,7 @@ public class GameManager {
                             }
                             turnoJoker++;
                             nrTurno++;
-                            johnMcClaneCount++;
+                            johnMcClaneCountWhite++;
                             tabuleiro.changeTurnInGame();
                             return true;
                         }
