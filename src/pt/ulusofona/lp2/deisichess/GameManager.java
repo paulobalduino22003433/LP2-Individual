@@ -148,6 +148,7 @@ public class GameManager {
             removeCapturedPieces();
             fillTop5Capturas();
             if (yellowTeam.isEmpty()){
+                tabuleiro.isYellowTurn=false;
                 isWhiteVsBlackGame=true;
             }
             if (blackTeam.isEmpty()){
@@ -389,7 +390,7 @@ public class GameManager {
 
       if (peca.tipoDePeca.equals("5") || jokerMove == 5) {
           boolean obstacleInPath = false;
-          if (x1 == x0) { // Check if the movement is vertical
+          if (x1 == x0) { //Checa se o movimento é vertical
               if (percursoVertical > 0) {
                   for (int y = y0 + 1; y < y1; y++) {
                       if (y >= 0 && y < GameManager.cordenadasPecasArray.length) {
@@ -420,21 +421,21 @@ public class GameManager {
       }
 
       if (peca.tipoDePeca.equals("3") || jokerMove == 3) {
-          // Check if the movement is diagonal
+          //Checa se o movimento é diagonal
           if (percursoHorizontal == percursoVertical || percursoHorizontal == -percursoVertical) {
-              // Check if the movement does not exceed 3 squares
+              //Checa se o movimento não passa de 3 casas
               if (percursoHorizontal <= 3 && percursoHorizontal >= -3) {
-                  // Iterate over the squares between (x0, y0) and (x1, y1)
+                  //Itera sobre as casas entre (x0, y0) and (x1, y1)
                   for (int i = 1; i < Math.abs(percursoHorizontal); i++) {
                       int checkX = x0 + Integer.signum(percursoHorizontal) * i;
                       int checkY = y0 + Integer.signum(percursoVertical) * i;
 
-                      // Check if there is an obstacle in the current square
+                      //Checa se existe um obstaculo no caminho
                       if (!cordenadasPecasArray[checkY][checkX].equals("0")) {
-                          return false; // Movement is blocked by an obstacle
+                          return false; //Movimento bloqueado por obstaculo
                       }
                   }
-                  return true; // Movement is allowed
+                  return true; //Movimento permitido
               }
           }
           return false;
@@ -459,7 +460,7 @@ public class GameManager {
       }
 
         if (peca.tipoDePeca.equals("4") || jokerMove == 4) {
-            if (y1 == y0) { // Check if the movement is horizontal
+            if (y1 == y0) { //Checka se o movimento é horizontal
                 boolean obstacleInPath = false;
 
                 if (percursoHorizontal > 0) {
@@ -487,7 +488,7 @@ public class GameManager {
                     return false;
                 }
 
-                return true; // If no obstacles, the movement is valid
+                return true;
             } else{
                 return false;
             }
@@ -498,19 +499,19 @@ public class GameManager {
           boolean isHorizontal=false;
           boolean isVertical=false;
           boolean isDiagonal=false;
-          // Checka se o movimento e horizontal
+          // Checka se o movimento é horizontal
           if (percursoVertical == 0 && (percursoHorizontal >= -5 && percursoHorizontal <= 5)) {
               valid= true;
               isHorizontal=true;
           }
 
-          // Checka se o movimento e vertical
+          // Checka se o movimento é vertical
           if (percursoHorizontal == 0 && (percursoVertical >= -5 && percursoVertical <= 5)) {
               valid= true;
               isVertical=true;
           }
 
-          // Checka se o movimento e diagonal
+          // Checka se o movimento é diagonal
           if ((percursoHorizontal == percursoVertical || percursoHorizontal == -percursoVertical) &&
                   (percursoHorizontal >= -5 && percursoHorizontal <= 5)) {
               valid= true;
@@ -545,44 +546,44 @@ public class GameManager {
               }
 
               if (isHorizontal){
-                  // Iterate over the squares between (x0, y0) and (x1, y1) for horizontal movement
+                  // Itera sobre as casas emtre (x0, y0) e (x1, y1) para movimento horizontal
                   for (int i = 1; i < Math.abs(percursoHorizontal); i++) {
                       int checkX = x0 + Integer.signum(percursoHorizontal) * i;
                       int checkY = y0;
 
-                      // Check if there is an obstacle in the current square
+                      //Checa se existe um obstaculo na casa de momento
                       if (!cordenadasPecasArray[checkY][checkX].equals("0")) {
-                          return false; // Movement is blocked by an obstacle
+                          return false; // Movimento bloqueado por obstaculo
                       }
                   }
-                  return true; // Horizontal movement is allowed
+                  return true; // Movimento horizontal permitido
               }
 
               if (isVertical){
-                  // Iterate over the squares between (x0, y0) and (x1, y1) for vertical movement
+                  // Itera sobre as casas entre (x0, y0) e (x1, y1) para movimento vertical
                   for (int i = 1; i < Math.abs(percursoVertical); i++) {
                       int checkX = x0;
                       int checkY = y0 + Integer.signum(percursoVertical) * i;
 
-                      // Check if there is an obstacle in the current square
+                      // Checa se existe um obstaculo na casa de momento
                       if (!cordenadasPecasArray[checkY][checkX].equals("0")) {
-                          return false; // Movement is blocked by an obstacle
+                          return false; // Movimento bloqueado por obstaculo
                       }
                   }
-                  return true; // Vertical movement is allowed
+                  return true; // Movimento vertical permitido
               }
               if (isDiagonal){
-                  // Iterate over the squares between (x0, y0) and (x1, y1) for diagonal movement
+                  // Itera sobre as casas entre (x0, y0) e (x1, y1) para movimento diagonal
                   for (int i = 1; i < Math.abs(percursoHorizontal); i++) {
                       int checkX = x0 + Integer.signum(percursoHorizontal) * i;
                       int checkY = y0 + Integer.signum(percursoVertical) * i;
 
-                      // Check if there is an obstacle in the current square
+                      // Checa se existe um obstaculo na casa de momento
                       if (!cordenadasPecasArray[checkY][checkX].equals("0")) {
-                          return false; // Movement is blocked by an obstacle
+                          return false; // Movimento bloqueado por obstaculo
                       }
                   }
-                  return true; // Diagonal movement is allowed
+                  return true;
               }
 
              return false;
@@ -619,6 +620,15 @@ public class GameManager {
             for (Peca peca : blackTeam) {
                 if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])) {
                     pecaParaMover = peca;
+                    break;
+                }
+            }
+        }
+
+        if (tabuleiro.getIsYellowTurn()){
+            for (Peca peca: yellowTeam){
+                if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])){
+                    pecaParaMover=peca;
                     break;
                 }
             }
