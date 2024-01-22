@@ -57,9 +57,6 @@ public class GameManager {
             tabuleiro.isWhiteVsBlackGame=false;
             tabuleiro.isYellowVsWhiteGame=false;
             tabuleiro.isYellowVsBlackGame=false;
-            statusAmarela = new StatsPeca();
-            statusBranca= new StatsPeca();
-            statusPreta= new StatsPeca();
             invalidPieceName = new String();
 
 
