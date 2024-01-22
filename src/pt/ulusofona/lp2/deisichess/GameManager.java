@@ -1215,10 +1215,10 @@ public class GameManager {
             placar.add("Equipa das Pretas");
             placar.add(Integer.toString(statusPreta.getCaptures()));
             placar.add(Integer.toString(statusPreta.getValidMoves()));
-            placar.add(Integer.toString(statusPreta.getInvalidMoves()));
+            placar.add(Integer.toString(statusPreta.getInvalidMoves()-1));
             placar.add("Equipa das Amarelas");
             placar.add(Integer.toString(statusAmarela.getCaptures()));
-            placar.add(Integer.toString(statusAmarela.getValidMoves()));
+            placar.add(Integer.toString(statusAmarela.getValidMoves()-1));
             placar.add(Integer.toString(statusAmarela.getInvalidMoves()));
         }
         return placar;
