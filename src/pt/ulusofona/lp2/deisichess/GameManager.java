@@ -57,6 +57,8 @@ public class GameManager {
             tabuleiro.isYellowVsWhiteGame=false;
             tabuleiro.isYellowVsBlackGame=false;
             statusAmarela = new StatsPeca();
+            statusBranca= new StatsPeca();
+            statusPreta= new StatsPeca();
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -636,7 +638,11 @@ public class GameManager {
                 statusPreta.incInvalidMoves();
                 return false;
             }
-            statusBranca.incInvalidMoves();
+            if (tabuleiro.getIsWhiteTurn()){
+                statusBranca.incInvalidMoves();
+                return false;
+            }
+            statusAmarela.incInvalidMoves();
             return false;
         }
 
@@ -646,7 +652,11 @@ public class GameManager {
                 statusPreta.incInvalidMoves();
                 return false;
             }
-            statusBranca.incInvalidMoves();
+            if (tabuleiro.getIsWhiteTurn()){
+                statusBranca.incInvalidMoves();
+                return false;
+            }
+            statusAmarela.incInvalidMoves();
             return false;
         }
 
@@ -655,7 +665,11 @@ public class GameManager {
                 statusPreta.incInvalidMoves();
                 return false;
             }
-            statusBranca.incInvalidMoves();
+            if (tabuleiro.getIsWhiteTurn()){
+                statusBranca.incInvalidMoves();
+                return false;
+            }
+            statusAmarela.incInvalidMoves();
             return false;
         }
 
@@ -664,7 +678,11 @@ public class GameManager {
                 statusPreta.incInvalidMoves();
                 return false;
             }
-            statusBranca.incInvalidMoves();
+            if (tabuleiro.getIsWhiteTurn()){
+                statusBranca.incInvalidMoves();
+                return false;
+            }
+            statusAmarela.incInvalidMoves();
             return false;
         }
 
@@ -673,7 +691,11 @@ public class GameManager {
                 statusPreta.incInvalidMoves();
                 return false;
             }
-            statusBranca.incInvalidMoves();
+            if (tabuleiro.getIsWhiteTurn()){
+                statusBranca.incInvalidMoves();
+                return false;
+            }
+            statusAmarela.incInvalidMoves();
             return false;
         }
 
@@ -1100,17 +1122,47 @@ public class GameManager {
     public ArrayList<String> getGameResults() {
         ArrayList<String> placar = new ArrayList<>();
 
-        placar.add("JOGO DE CRAZY CHESS");
-        placar.add("Resultado: " + gameResults.getResultadoJogo());
-        placar.add("---");
-        placar.add("Equipa das Pretas");
-        placar.add(Integer.toString(statusPreta.getCaptures()));
-        placar.add(Integer.toString(statusPreta.getValidMoves()));
-        placar.add(Integer.toString(statusPreta.getInvalidMoves()));
-        placar.add("Equipa das Brancas");
-        placar.add(Integer.toString(statusBranca.getCaptures()));
-        placar.add(Integer.toString(statusBranca.getValidMoves()));
-        placar.add(Integer.toString(statusBranca.getInvalidMoves()));
+        if (tabuleiro.isWhiteVsBlackGame){
+            placar.add("JOGO DE CRAZY CHESS");
+            placar.add("Resultado: " + gameResults.getResultadoJogo());
+            placar.add("---");
+            placar.add("Equipa das Pretas");
+            placar.add(Integer.toString(statusPreta.getCaptures()));
+            placar.add(Integer.toString(statusPreta.getValidMoves()));
+            placar.add(Integer.toString(statusPreta.getInvalidMoves()));
+            placar.add("Equipa das Brancas");
+            placar.add(Integer.toString(statusBranca.getCaptures()));
+            placar.add(Integer.toString(statusBranca.getValidMoves()));
+            placar.add(Integer.toString(statusBranca.getInvalidMoves()));
+        }
+
+        if (tabuleiro.isYellowVsWhiteGame){
+            placar.add("JOGO DE CRAZY CHESS");
+            placar.add("Resultado: " + gameResults.getResultadoJogo());
+            placar.add("---");
+            placar.add("Equipa das Amarelas");
+            placar.add(Integer.toString(statusAmarela.getCaptures()));
+            placar.add(Integer.toString(statusAmarela.getValidMoves()));
+            placar.add(Integer.toString(statusAmarela.getInvalidMoves()));
+            placar.add("Equipa das Brancas");
+            placar.add(Integer.toString(statusBranca.getCaptures()));
+            placar.add(Integer.toString(statusBranca.getValidMoves()));
+            placar.add(Integer.toString(statusBranca.getInvalidMoves()));
+        }
+
+        if (tabuleiro.isYellowVsBlackGame){
+            placar.add("JOGO DE CRAZY CHESS");
+            placar.add("Resultado: " + gameResults.getResultadoJogo());
+            placar.add("---");
+            placar.add("Equipa das Pretas");
+            placar.add(Integer.toString(statusPreta.getCaptures()));
+            placar.add(Integer.toString(statusPreta.getValidMoves()));
+            placar.add(Integer.toString(statusPreta.getInvalidMoves()));
+            placar.add("Equipa das Amarelas");
+            placar.add(Integer.toString(statusAmarela.getCaptures()));
+            placar.add(Integer.toString(statusAmarela.getValidMoves()));
+            placar.add(Integer.toString(statusAmarela.getInvalidMoves()));
+        }
         return placar;
     }
 
