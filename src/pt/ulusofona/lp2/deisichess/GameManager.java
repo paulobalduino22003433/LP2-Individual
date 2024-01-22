@@ -19,6 +19,8 @@ public class GameManager {
     public Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam);
     public StatsPeca statusPreta = new StatsPeca();
     public StatsPeca statusBranca = new StatsPeca();
+
+    public StatsPeca statusAmarela = new StatsPeca();
     public GameResults gameResults = new GameResults();
     public static int nrTurno=0;
 
@@ -54,6 +56,7 @@ public class GameManager {
             tabuleiro.isWhiteVsBlackGame=false;
             tabuleiro.isYellowVsWhiteGame=false;
             tabuleiro.isYellowVsBlackGame=false;
+            statusAmarela = new StatsPeca();
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -680,174 +683,298 @@ public class GameManager {
 
         boolean pecaCapturadaAgora = false;
 
-        if (tabuleiro.getIsBlackTurn()) {
-            Peca pecaQueCaptura = null;
-            Peca pecaCapturada =  null;
-            for(Peca peca: blackTeam){
-                if (peca.getIdentificador().equals(movimentoParaPeca)){
-                    statusPreta.incInvalidMoves();
-                    return false;
-                }
-            }
-            for (Peca pecaBranca : whiteTeam) {
-                if (pecaBranca.getIdentificador().equals(pecaAtual)) {
-                    statusPreta.incInvalidMoves();
-                    return false;
-                }
-            }
-
-            for (Peca peca:blackTeam){
-                if (peca.getIdentificador().equals(pecaAtual)){
-                    pecaQueCaptura=peca;
-                    break;
-                }
-            }
-
-            for (Peca peca:whiteTeam){
-                if (peca.getIdentificador().equals(movimentoParaPeca)){
-                    pecaCapturada=peca;
-                    break;
-                }
-            }
-            boolean isInTop5=false;
-            for (Peca pecaBranca : whiteTeam) {
-                if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
-                    if (pecaQueCaptura!=null && pecaCapturada != null){
-                        Capturas captura = new Capturas(pecaQueCaptura,pecaCapturada);
-                        capturas.add(captura);
-                        for (Capturas capturas1:top5Capturas){
-                            if (capturas1.pecaQueCaptura.getIdentificador().equals(pecaAtual)){
-                                capturas1.incNrCapturas();
-                                isInTop5=true;
-                                break;
-                            }
-                        }
-                        if (!isInTop5){
-                           Capturas captura1 = new Capturas(pecaQueCaptura,1);
-                           top5Capturas.add(captura1);
-                        }
+        if (tabuleiro.isWhiteVsBlackGame){
+            if (tabuleiro.getIsBlackTurn()) {
+                Peca pecaQueCaptura = null;
+                Peca pecaCapturada =  null;
+                for(Peca peca: blackTeam){
+                    if (peca.getIdentificador().equals(movimentoParaPeca)){
+                        statusPreta.incInvalidMoves();
+                        return false;
                     }
-                    if (pecaBranca.tipoDePeca.equals("10")){
-                        if (johnMcClaneCountBlack<3){
-                            cordenadasPecasArray[y0][x0] = movimentoParaPeca;
-                            cordenadasPecasArray[y1][x1] = pecaAtual;
-                            for (Peca pecaTemporaria : pecas) {
-                                if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
-                                    pecaTemporaria.setX(Integer.toString(x1));
-                                    pecaTemporaria.setY(Integer.toString(y1));
-                                }
-                                if (pecaTemporaria.getIdentificador().equals(movimentoParaPeca)){
-                                    pecaTemporaria.setX(Integer.toString(x0));
-                                    pecaTemporaria.setY(Integer.toString(y0));
+                }
+                for (Peca pecaBranca : whiteTeam) {
+                    if (pecaBranca.getIdentificador().equals(pecaAtual)) {
+                        statusPreta.incInvalidMoves();
+                        return false;
+                    }
+                }
+
+                for (Peca peca:blackTeam){
+                    if (peca.getIdentificador().equals(pecaAtual)){
+                        pecaQueCaptura=peca;
+                        break;
+                    }
+                }
+
+                for (Peca peca:whiteTeam){
+                    if (peca.getIdentificador().equals(movimentoParaPeca)){
+                        pecaCapturada=peca;
+                        break;
+                    }
+                }
+                boolean isInTop5=false;
+                for (Peca pecaBranca : whiteTeam) {
+                    if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
+                        if (pecaQueCaptura!=null && pecaCapturada != null){
+                            Capturas captura = new Capturas(pecaQueCaptura,pecaCapturada);
+                            capturas.add(captura);
+                            for (Capturas capturas1:top5Capturas){
+                                if (capturas1.pecaQueCaptura.getIdentificador().equals(pecaAtual)){
+                                    capturas1.incNrCapturas();
+                                    isInTop5=true;
+                                    break;
                                 }
                             }
-                            if (turnoJoker==6){
-                                turnoJoker=0;
+                            if (!isInTop5){
+                                Capturas captura1 = new Capturas(pecaQueCaptura,1);
+                                top5Capturas.add(captura1);
                             }
-                            turnoJoker++;
-                            nrTurno++;
-                            johnMcClaneCountBlack++;
-                            tabuleiro.changeTurnInGame();
-                            return true;
                         }
+                        if (pecaBranca.tipoDePeca.equals("10")){
+                            if (johnMcClaneCountBlack<3){
+                                cordenadasPecasArray[y0][x0] = movimentoParaPeca;
+                                cordenadasPecasArray[y1][x1] = pecaAtual;
+                                for (Peca pecaTemporaria : pecas) {
+                                    if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
+                                        pecaTemporaria.setX(Integer.toString(x1));
+                                        pecaTemporaria.setY(Integer.toString(y1));
+                                    }
+                                    if (pecaTemporaria.getIdentificador().equals(movimentoParaPeca)){
+                                        pecaTemporaria.setX(Integer.toString(x0));
+                                        pecaTemporaria.setY(Integer.toString(y0));
+                                    }
+                                }
+                                if (turnoJoker==6){
+                                    turnoJoker=0;
+                                }
+                                turnoJoker++;
+                                nrTurno++;
+                                johnMcClaneCountBlack++;
+                                tabuleiro.changeTurnInGame();
+                                return true;
+                            }
+                        }
+                        pecaBranca.estadoPecaCapturado();
+                        pecaBranca.x = "";
+                        pecaBranca.y = "";
+                        whiteTeam.remove(pecaBranca);
+                        pecaCapturadaAgora = true;
+                        statusPreta.incCaptures();
+                        gameResults.jogadasSemCaptura=0;
+                        break;
                     }
-                    pecaBranca.estadoPecaCapturado();
-                    pecaBranca.x = "";
-                    pecaBranca.y = "";
-                    whiteTeam.remove(pecaBranca);
-                    pecaCapturadaAgora = true;
-                    statusPreta.incCaptures();
-                    gameResults.jogadasSemCaptura=0;
-                    break;
                 }
+                statusPreta.incValidMoves();
             }
-            statusPreta.incValidMoves();
+            if (tabuleiro.getIsWhiteTurn()) {
+                Peca pecaQueCaptura = null;
+                Peca pecaCapturada =  null;
+                for(Peca peca:whiteTeam){
+                    if(peca.getIdentificador().equals(movimentoParaPeca)){
+                        statusBranca.incInvalidMoves();
+                        return false;
+                    }
+                }
+                for (Peca pecaPreta : blackTeam) {
+                    if (pecaPreta.getIdentificador().equals(pecaAtual)) {
+                        statusBranca.incInvalidMoves();
+                        return false;
+                    }
+                }
+                for (Peca peca:whiteTeam){
+                    if (peca.getIdentificador().equals(pecaAtual)){
+                        pecaQueCaptura=peca;
+                        break;
+                    }
+                }
+                for (Peca peca:blackTeam){
+                    if (peca.getIdentificador().equals(movimentoParaPeca)){
+                        pecaCapturada=peca;
+                        break;
+                    }
+                }
+
+                boolean isInTop5=false;
+                for (Peca pecaPreta : blackTeam) {
+                    if (pecaPreta.getIdentificador().equals(movimentoParaPeca)) {
+                        if (pecaQueCaptura!=null && pecaCapturada != null){
+                            Capturas captura = new Capturas(pecaQueCaptura,pecaCapturada);
+                            capturas.add(captura);
+                            for (Capturas capturas1:top5Capturas){
+                                if (capturas1.pecaQueCaptura.getIdentificador().equals(pecaAtual)){
+                                    capturas1.incNrCapturas();
+                                    isInTop5=true;
+                                    break;
+                                }
+                            }
+                            if (!isInTop5){
+                                Capturas captura1 = new Capturas(pecaQueCaptura,1);
+                                top5Capturas.add(captura1);
+                            }
+                        }
+
+                        if (pecaPreta.tipoDePeca.equals("10")){
+                            if (johnMcClaneCountWhite<3){
+
+                                cordenadasPecasArray[y0][x0] = movimentoParaPeca;
+                                cordenadasPecasArray[y1][x1] = pecaAtual;
+
+                                for (Peca pecaTemporaria : pecas) {
+                                    if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
+                                        pecaTemporaria.setX(Integer.toString(x1));
+                                        pecaTemporaria.setY(Integer.toString(y1));
+                                    }
+                                    if (pecaTemporaria.getIdentificador().equals(movimentoParaPeca)){
+                                        pecaTemporaria.setX(Integer.toString(x0));
+                                        pecaTemporaria.setY(Integer.toString(y0));
+                                    }
+                                }
+                                if (turnoJoker==6){
+                                    turnoJoker=0;
+                                }
+                                turnoJoker++;
+                                nrTurno++;
+                                johnMcClaneCountWhite++;
+                                tabuleiro.changeTurnInGame();
+                                return true;
+                            }
+                        }
+                        pecaPreta.estadoPecaCapturado();
+                        pecaPreta.x = "";
+                        pecaPreta.y = "";
+                        blackTeam.remove(pecaPreta);
+                        pecaCapturadaAgora = true;
+                        statusBranca.incCaptures();
+                        gameResults.jogadasSemCaptura=0;
+                        break;
+                    }
+                }
+                statusBranca.incValidMoves();
+            }
         }
-        if (tabuleiro.getIsWhiteTurn()) {
-            Peca pecaQueCaptura = null;
-            Peca pecaCapturada =  null;
-            for(Peca peca:whiteTeam){
-                if(peca.getIdentificador().equals(movimentoParaPeca)){
-                    statusBranca.incInvalidMoves();
-                    return false;
-                }
-            }
-            for (Peca pecaPreta : blackTeam) {
-                if (pecaPreta.getIdentificador().equals(pecaAtual)) {
-                    statusBranca.incInvalidMoves();
-                    return false;
-                }
-            }
-            for (Peca peca:whiteTeam){
-                if (peca.getIdentificador().equals(pecaAtual)){
-                    pecaQueCaptura=peca;
-                    break;
-                }
-            }
-            for (Peca peca:blackTeam){
-                if (peca.getIdentificador().equals(movimentoParaPeca)){
-                    pecaCapturada=peca;
-                    break;
-                }
-            }
-
-            boolean isInTop5=false;
-            for (Peca pecaPreta : blackTeam) {
-                if (pecaPreta.getIdentificador().equals(movimentoParaPeca)) {
-                    if (pecaQueCaptura!=null && pecaCapturada != null){
-                        Capturas captura = new Capturas(pecaQueCaptura,pecaCapturada);
-                        capturas.add(captura);
-                        for (Capturas capturas1:top5Capturas){
-                            if (capturas1.pecaQueCaptura.getIdentificador().equals(pecaAtual)){
-                                capturas1.incNrCapturas();
-                                isInTop5=true;
-                                break;
-                            }
-                        }
-                        if (!isInTop5){
-                            Capturas captura1 = new Capturas(pecaQueCaptura,1);
-                            top5Capturas.add(captura1);
-                        }
+        if (tabuleiro.isYellowVsBlackGame){
+            if (tabuleiro.getIsYellowTurn()){
+                for(Peca peca:yellowTeam){
+                    if(peca.getIdentificador().equals(movimentoParaPeca)){
+                        statusAmarela.incInvalidMoves();
+                        return false;
                     }
-
-                    if (pecaPreta.tipoDePeca.equals("10")){
-                        if (johnMcClaneCountWhite<3){
-
-                            cordenadasPecasArray[y0][x0] = movimentoParaPeca;
-                            cordenadasPecasArray[y1][x1] = pecaAtual;
-
-                            for (Peca pecaTemporaria : pecas) {
-                                if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
-                                    pecaTemporaria.setX(Integer.toString(x1));
-                                    pecaTemporaria.setY(Integer.toString(y1));
-                                }
-                                if (pecaTemporaria.getIdentificador().equals(movimentoParaPeca)){
-                                    pecaTemporaria.setX(Integer.toString(x0));
-                                    pecaTemporaria.setY(Integer.toString(y0));
-                                }
-                            }
-                            if (turnoJoker==6){
-                                turnoJoker=0;
-                            }
-                            turnoJoker++;
-                            nrTurno++;
-                            johnMcClaneCountWhite++;
-                            tabuleiro.changeTurnInGame();
-                            return true;
-                        }
-                    }
-                    pecaPreta.estadoPecaCapturado();
-                    pecaPreta.x = "";
-                    pecaPreta.y = "";
-                    blackTeam.remove(pecaPreta);
-                    pecaCapturadaAgora = true;
-                    statusBranca.incCaptures();
-                    gameResults.jogadasSemCaptura=0;
-                    break;
                 }
+                for (Peca pecaPreta : blackTeam) {
+                    if (pecaPreta.getIdentificador().equals(pecaAtual)) {
+                        statusAmarela.incInvalidMoves();
+                        return false;
+                    }
+                }
+
+                for (Peca pecaPreta : blackTeam) {
+                    if (pecaPreta.getIdentificador().equals(movimentoParaPeca)) {
+                        pecaPreta.estadoPecaCapturado();
+                        pecaPreta.x = "";
+                        pecaPreta.y = "";
+                        blackTeam.remove(pecaPreta);
+                        pecaCapturadaAgora = true;
+                        statusAmarela.incCaptures();
+                        gameResults.jogadasSemCaptura=0;
+                        break;
+                    }
+                }
+
+                statusAmarela.incValidMoves();
             }
-            statusBranca.incValidMoves();
+
+            if (tabuleiro.getIsBlackTurn()){
+                for(Peca peca: blackTeam){
+                    if (peca.getIdentificador().equals(movimentoParaPeca)){
+                        statusPreta.incInvalidMoves();
+                        return false;
+                    }
+                }
+                for (Peca pecaAmarela : yellowTeam) {
+                    if (pecaAmarela.getIdentificador().equals(pecaAtual)) {
+                        statusPreta.incInvalidMoves();
+                        return false;
+                    }
+                }
+                for (Peca pecaAmarela :yellowTeam) {
+                    if (pecaAmarela.getIdentificador().equals(movimentoParaPeca)) {
+                        pecaAmarela.estadoPecaCapturado();
+                        pecaAmarela.x = "";
+                        pecaAmarela.y = "";
+                        yellowTeam.remove(pecaAmarela);
+                        pecaCapturadaAgora = true;
+                        statusPreta.incCaptures();
+                        gameResults.jogadasSemCaptura=0;
+                        break;
+                    }
+                }
+
+                statusPreta.incValidMoves();
+            }
         }
+
+        if (tabuleiro.isYellowVsWhiteGame){
+            if (tabuleiro.getIsYellowTurn()){
+                for(Peca peca:yellowTeam){
+                    if(peca.getIdentificador().equals(movimentoParaPeca)){
+                        statusAmarela.incInvalidMoves();
+                        return false;
+                    }
+                }
+                for (Peca pecaWhite : whiteTeam) {
+                    if (pecaWhite.getIdentificador().equals(pecaAtual)) {
+                        statusAmarela.incInvalidMoves();
+                        return false;
+                    }
+                }
+
+                for (Peca pecaBranca : whiteTeam) {
+                    if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
+                        pecaBranca.estadoPecaCapturado();
+                        pecaBranca.x = "";
+                        pecaBranca.y = "";
+                        whiteTeam.remove(pecaBranca);
+                        pecaCapturadaAgora = true;
+                        statusAmarela.incCaptures();
+                        gameResults.jogadasSemCaptura=0;
+                        break;
+                    }
+                }
+
+                statusAmarela.incValidMoves();
+            }
+
+            if (tabuleiro.getIsWhiteTurn()){
+                for(Peca peca:whiteTeam){
+                    if(peca.getIdentificador().equals(movimentoParaPeca)){
+                        statusBranca.incInvalidMoves();
+                        return false;
+                    }
+                }
+                for (Peca pecaAmarela : yellowTeam) {
+                    if (pecaAmarela.getIdentificador().equals(pecaAtual)) {
+                        statusBranca.incInvalidMoves();
+                        return false;
+                    }
+                }
+                for (Peca pecaAmarela :yellowTeam) {
+                    if (pecaAmarela.getIdentificador().equals(movimentoParaPeca)) {
+                        pecaAmarela.estadoPecaCapturado();
+                        pecaAmarela.x = "";
+                        pecaAmarela.y = "";
+                        yellowTeam.remove(pecaAmarela);
+                        pecaCapturadaAgora = true;
+                        statusBranca.incCaptures();
+                        gameResults.jogadasSemCaptura=0;
+                        break;
+                    }
+                }
+
+                statusBranca.incValidMoves();
+            }
+        }
+
 
         if (pecaCapturadaAgora) {
             tabuleiro.umaPecaMorreu();
