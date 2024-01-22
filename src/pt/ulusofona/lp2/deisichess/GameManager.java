@@ -34,6 +34,7 @@ public class GameManager {
     public int johnMcClaneCountBlack;
 
     public ArrayList<Peca> yellowTeam = new ArrayList<>();
+    public String invalidPieceName;
 
     public void loadGame(File file) throws IOException, InvalidGameInputException,InvalidTeamException {
         try {
@@ -59,6 +60,7 @@ public class GameManager {
             statusAmarela = new StatsPeca();
             statusBranca= new StatsPeca();
             statusPreta= new StatsPeca();
+            invalidPieceName = new String();
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -85,6 +87,9 @@ public class GameManager {
                     if (partes.length==4){
                         Peca peca = colocarTipoDePeca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim());
                         if (!partes[2].trim().equals("10") && !partes[2].trim().equals("20") && !partes[2].trim().equals("30")) {
+                            if (partes[3]!=null){
+                                invalidPieceName=partes[3];
+                            }
                             throw new InvalidTeamException("Equipa Invalida: " + partes[2].trim());
                         }
                         pecas.add(peca);
@@ -182,7 +187,7 @@ public class GameManager {
         catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidTeamException e) {
-            throw new InvalidTeamException("problem description: " + e.getProblemDescription());
+            throw new InvalidTeamException(invalidPieceName);
         }
     }
 
@@ -1134,6 +1139,7 @@ public class GameManager {
             placar.add(Integer.toString(statusBranca.getCaptures()));
             placar.add(Integer.toString(statusBranca.getValidMoves()));
             placar.add(Integer.toString(statusBranca.getInvalidMoves()));
+            return placar;
         }
 
         if (tabuleiro.isYellowVsWhiteGame){
@@ -1148,6 +1154,7 @@ public class GameManager {
             placar.add(Integer.toString(statusBranca.getCaptures()));
             placar.add(Integer.toString(statusBranca.getValidMoves()));
             placar.add(Integer.toString(statusBranca.getInvalidMoves()));
+            return placar;
         }
 
         if (tabuleiro.isYellowVsBlackGame){

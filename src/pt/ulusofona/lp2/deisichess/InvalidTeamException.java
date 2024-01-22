@@ -4,8 +4,8 @@ public class InvalidTeamException extends Exception {
     public String problemDescription;
     public String invalidPieceName;
 
-    public InvalidTeamException(String problemDescription) {
-        this.problemDescription = problemDescription;
+    public InvalidTeamException(String invalidPieceName) {
+      this.invalidPieceName=invalidPieceName;
     }
 
     public String getProblemDescription() {
