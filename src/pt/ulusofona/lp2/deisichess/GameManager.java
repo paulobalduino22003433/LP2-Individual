@@ -32,6 +32,7 @@ public class GameManager {
     InvalidGameInputException invalidGameInputException = new InvalidGameInputException(0,"");
     public int johnMcClaneCountWhite;
     public int johnMcClaneCountBlack;
+    public int johnMcClaneCountYellow;
 
     public ArrayList<Peca> yellowTeam = new ArrayList<>();
     public String invalidPieceName;
@@ -53,6 +54,7 @@ public class GameManager {
             gameResults= new GameResults();
             johnMcClaneCountBlack=0;
             johnMcClaneCountWhite=0;
+            johnMcClaneCountYellow=0;
             yellowTeam = new ArrayList<>();
             tabuleiro.isWhiteVsBlackGame=false;
             tabuleiro.isYellowVsWhiteGame=false;
@@ -894,6 +896,33 @@ public class GameManager {
 
                 for (Peca pecaPreta : blackTeam) {
                     if (pecaPreta.getIdentificador().equals(movimentoParaPeca)) {
+
+                        if (pecaPreta.tipoDePeca.equals("10")){
+                            if (johnMcClaneCountYellow<3){
+                                cordenadasPecasArray[y0][x0] = movimentoParaPeca;
+                                cordenadasPecasArray[y1][x1] = pecaAtual;
+
+                                for (Peca pecaTemporaria : pecas) {
+                                    if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
+                                        pecaTemporaria.setX(Integer.toString(x1));
+                                        pecaTemporaria.setY(Integer.toString(y1));
+                                    }
+                                    if (pecaTemporaria.getIdentificador().equals(movimentoParaPeca)){
+                                        pecaTemporaria.setX(Integer.toString(x0));
+                                        pecaTemporaria.setY(Integer.toString(y0));
+                                    }
+                                }
+                                if (turnoJoker==6){
+                                    turnoJoker=0;
+                                }
+                                turnoJoker++;
+                                nrTurno++;
+                                johnMcClaneCountYellow++;
+                                statusAmarela.incValidMoves();
+                                tabuleiro.changeTurnInGame();
+                                return true;
+                            }
+                        }
                         pecaPreta.estadoPecaCapturado();
                         pecaPreta.x = "";
                         pecaPreta.y = "";
@@ -923,6 +952,31 @@ public class GameManager {
                 }
                 for (Peca pecaAmarela :yellowTeam) {
                     if (pecaAmarela.getIdentificador().equals(movimentoParaPeca)) {
+                        if (pecaAmarela.tipoDePeca.equals("10")){
+                            if (johnMcClaneCountBlack<3){
+                                cordenadasPecasArray[y0][x0] = movimentoParaPeca;
+                                cordenadasPecasArray[y1][x1] = pecaAtual;
+                                for (Peca pecaTemporaria : pecas) {
+                                    if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
+                                        pecaTemporaria.setX(Integer.toString(x1));
+                                        pecaTemporaria.setY(Integer.toString(y1));
+                                    }
+                                    if (pecaTemporaria.getIdentificador().equals(movimentoParaPeca)){
+                                        pecaTemporaria.setX(Integer.toString(x0));
+                                        pecaTemporaria.setY(Integer.toString(y0));
+                                    }
+                                }
+                                if (turnoJoker==6){
+                                    turnoJoker=0;
+                                }
+                                turnoJoker++;
+                                nrTurno++;
+                                johnMcClaneCountBlack++;
+                                statusPreta.incValidMoves();
+                                tabuleiro.changeTurnInGame();
+                                return true;
+                            }
+                        }
                         pecaAmarela.estadoPecaCapturado();
                         pecaAmarela.x = "";
                         pecaAmarela.y = "";
